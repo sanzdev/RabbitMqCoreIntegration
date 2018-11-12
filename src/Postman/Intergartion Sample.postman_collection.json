@@ -1,0 +1,137 @@
+{
+	"info": {
+		"_postman_id": "b8156705-f851-4a42-ad65-ddf67132edb2",
+		"name": "Intergartion Sample",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "France",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "text/xml",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<Data>\r\n\t<Id>1000000003</Id>\r\n\t<Status>Pending</Status>\r\n\t<Country>FRA</Country>\t\r\n\t<TotalAmount>9823.12</TotalAmount>\r\n\t<TotalVatAmount>34.12</TotalVatAmount>\r\n</Data>"
+				},
+				"url": {
+					"raw": "http://localhost:6000/api/v1/integration",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "6000",
+					"path": [
+						"api",
+						"v1",
+						"integration"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Australia",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "text/xml"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<Data>\r\n\t<Id>1000000003</Id>\r\n\t<Status>Confirmed</Status>\r\n\t<Country>AUS</Country>\t\r\n\t<TotalAmount>9823.12</TotalAmount>\r\n\t<TotalVatAmount>34.12</TotalVatAmount>\r\n</Data>\r\n\t\t\t\t\t"
+				},
+				"url": {
+					"raw": "http://localhost:6000/api/v1/integration",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "6000",
+					"path": [
+						"api",
+						"v1",
+						"integration"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Japan",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "text/xml",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<Data>\r\n\t<Id>1000000003</Id>\r\n\t<Status>Confirmed</Status>\r\n\t<Country>JPN</Country>\t\r\n\t<TotalAmount>9823.12</TotalAmount>\r\n\t<TotalVatAmount>34.12</TotalVatAmount>\r\n</Data>"
+				},
+				"url": {
+					"raw": "http://localhost:6000/api/v1/integration",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "6000",
+					"path": [
+						"api",
+						"v1",
+						"integration"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Invalid-Message",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "text/xml",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "\"This is an invalid message\""
+				},
+				"url": {
+					"raw": "http://localhost:6000/api/v1/integration",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "6000",
+					"path": [
+						"api",
+						"v1",
+						"integration"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
