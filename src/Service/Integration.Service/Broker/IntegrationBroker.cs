@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Integration.Service.Common.RabbitMq;
+using System;
 using System.Collections.Generic;
-using Integration.Service.Common.RabbitMq;
 
 namespace Integration.Service.Broker
 {
@@ -18,10 +18,8 @@ namespace Integration.Service.Broker
 
             foreach (var topic in topics)
             {
-                using (var rabbit = new RabbitMqSender(exchange: exchange, topic: topic))
-                {
-                    rabbit.SendMessage(message, correlationId);
-                }
+                var rabbit = new RabbitMqSender(exchange: exchange, topic: topic);
+                rabbit.Publish(message, correlationId);                
             }
             Console.WriteLine(
                 $"{DateTime.Now.ToShortDateString()} {DateTime.Now.ToShortTimeString()}: Message with CorrelationId: {correlationId} was sent to the integration broker: {message}");
@@ -56,11 +54,7 @@ namespace Integration.Service.Broker
 
                 // All other countries
                 else topics.Add("Country.*");
-            }
-
-            // If needed can set an invalid queue to handle invalid messages.
-            if (topics.Count.Equals(0))
-                topics.Add("Invalid");
+            }                      
 
             return topics.ToArray();
         }

@@ -1,9 +1,8 @@
-﻿using System;
+﻿using RabbitMQ.Client;
+using RabbitMQ.Client.Events;
+using System;
 using System.Collections.Generic;
 using System.Text;
-using RabbitMQ.Client;
-using RabbitMQ.Client.Events;
-using RabbitMQ.Client.MessagePatterns;
 
 namespace Integration.Service.Common.RabbitMq
 {
@@ -24,9 +23,9 @@ namespace Integration.Service.Common.RabbitMq
         public RabbitMqReceiver(string exchange, string queue, List<string> routingKeys)
         {
             _exchange = exchange;
-            _queue = queue;
+            _queue = $"{exchange}_{queue}_Queue";
             _keys = routingKeys;
-            _factory = new ConnectionFactory { HostName = "localhost", UserName = "guest", Password = "guest" };
+            _factory = new ConnectionFactory { HostName = "localhost" };
         }
 
         /// <summary>
@@ -47,24 +46,21 @@ namespace Integration.Service.Common.RabbitMq
                 using (var channel = _connection.CreateModel())
                 {
                     channel.ExchangeDeclare(_exchange, "topic", true);
-                    channel.QueueDeclare($"{_exchange}_{_queue}_Queue", true, false, false, null);
+                    channel.QueueDeclare(_queue, true, false, false, null);
 
                     BindQueues(channel);
 
-                    channel.BasicQos(0, 1, false);
-
-                    Subscription subscription = new Subscription(channel, $"{_exchange}_{_queue}_Queue", false);
-
-                    while (true)
+                    var consumer = new EventingBasicConsumer(channel);
+                    consumer.Received += (model, args) =>
                     {
-                        BasicDeliverEventArgs deliveryArguments = subscription.Next();
-                        var message = deliveryArguments.Body;
                         Console.ForegroundColor = ConsoleColor.DarkGreen;
                         Console.WriteLine(
-                            $"{DateTime.Now.ToShortDateString()} {DateTime.Now.ToShortTimeString()}: CorrelationId:{deliveryArguments.BasicProperties.CorrelationId} Message received:{Environment.NewLine}{Encoding.UTF8.GetString(message)}");
-                        Console.WriteLine("------------------------------------------------------------");
-                        subscription.Ack(deliveryArguments);
-                    }
+                                    $"{DateTime.Now.ToShortDateString()} {DateTime.Now.ToShortTimeString()}: CorrelationId:{args.BasicProperties.CorrelationId} Message received:{Environment.NewLine}{Encoding.UTF8.GetString(args.Body)}");
+                        Console.WriteLine("------------------------------------------------------------");                        
+                    };
+
+                    channel.BasicConsume(_queue, true, consumer);
+                    Console.ReadLine();                   
                 }
             }
         }
@@ -79,7 +75,7 @@ namespace Integration.Service.Common.RabbitMq
             {
                 foreach (var key in _keys)
                 {
-                    channel.QueueBind($"{_exchange}_{_queue}_Queue", _exchange, $"{_exchange}.{key}");
+                    channel.QueueBind(_queue, _exchange, $"{_exchange}.{key}");
                 }
             }
         }
